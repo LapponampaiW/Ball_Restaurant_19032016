@@ -5,6 +5,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,12 +25,20 @@ public class MainActivity extends AppCompatActivity {
 
     //Explicit
     private MyManage myManage;
+    private EditText userEditText, passwordEditText;
+    private String userString, passwordString; //รับค่าจาก EditText เพื่อไปประมวลผล
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Bind Widget
+        bindWidget();
+
 
         //Request SQLite
         myManage = new MyManage(this);
@@ -45,6 +56,39 @@ public class MainActivity extends AppCompatActivity {
 
 
     } // Main Method
+
+    public void clickLogin(View view) { //เพื่อให้มองเห็นใน xml
+
+        userString = userEditText.getText().toString().trim(); //เปลี่ยน editext ให้เป็น string และ trim ตัดช่องว่างหน้าหลัง
+        passwordString = passwordEditText.getText().toString().trim();
+
+        //Check Space
+        if (userString.equals("") || passwordString.equals("")) { //แบบว่าค่าเป็น null หรือป่าว
+            //Have space
+            myAlert("มีช่องว่าง"); //เพื่อให้บอกว่าใช้ String Type
+
+
+        } else {
+            //No Space
+
+        }
+
+
+
+    } //clickLogin
+
+    private void myAlert(String strMessage) {
+        Toast.makeText(MainActivity.this, strMessage, Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    private void bindWidget() {
+        userEditText = (EditText) findViewById(R.id.editText);
+        passwordEditText = (EditText) findViewById(R.id.editText2);
+
+
+    }
 
     private void synJSONtoSQLite() {
 

@@ -7,10 +7,51 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.su.lapponampai_w.testrestaurant.MainActivity">
+    tools:context="com.su.lapponampai_w.testrestaurant.MainActivity"
+    android:background="@drawable/bg10">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:padding="20dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="80dp"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:layout_width="@dimen/icon"
+            android:layout_height="@dimen/icon"
+            android:id="@+id/imageView"
+            android:src="@drawable/restaurant512" />
+
+        <EditText
+            android:layout_width="@dimen/edit"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:hint="User:"
+            android:inputType="text"
+            android:background="#82ffffff" />
+
+        <EditText
+            android:layout_width="@dimen/edit"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText2"
+            android:hint="Password :"
+            android:inputType="textPassword"
+            android:background="#82ffffff" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOGIN"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:onClick="clickLogin" />
 </RelativeLayout>
