@@ -36,7 +36,6 @@ public class MyopenHelper extends SQLiteOpenHelper { //ต้องใช้ค�
         เดินหา database_name (หาข้อมูล) ครั้งแรกถ้าไม่มีจะ oncreate อัตโนมัติ
         null คือ security
         database version แล้วแต่ version
-
         */
 
     }  //Constructor
