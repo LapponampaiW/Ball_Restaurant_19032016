@@ -17,7 +17,18 @@ public class MainActivity extends AppCompatActivity {
         //Request SQLite
         myManage = new MyManage(this);
 
+        //Test Add Value ใส่ค่าเข้าไปแบบ ทดสอบ
+        testAddValue();
+
 
 
     } // Main Method
+
+    private void testAddValue() {
+
+        myManage.addValue(1, "user", "Pass", "name");
+        myManage.addValue(2, "food", "price", "source");
+
+
+    }
 } // Main Class
