@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
 
 public class OrderActivity extends AppCompatActivity {
 
@@ -107,31 +118,64 @@ public class OrderActivity extends AppCompatActivity {
 
     }
 
-    private void confirmOrder() { //ทำการ Confirm order
+    private void confirmOrder() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.icon_myaccount);
         builder.setTitle("โปรดตรวจทาน");
-        builder.setMessage("Officer =" + officerString + "\n" +
+        builder.setMessage("Officer = " + officerString + "\n" +
                 "Desk = " + deskString + "\n" +
-                "Food =" + foodString + "\n" +
+                "Food = " + foodString + "\n" +
                 "Amount = " + amountString);
-
-
-
-        //ทำปุ่ม cancel กับ ปุ่ม Ok
-       builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { //setPositiveButtom เปลี่ยนเป็นอย่างอื่นได้ เต็มไปหมด
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 updateToServer();
                 dialogInterface.dismiss();
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
         builder.show();
 
-    } //confirmOrder
+
+    }   // confirmOrder
 
     private void updateToServer() {
+
+        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(threadPolicy); //ขออนุญาติ connect protocal ปกติต้อง connect ผ่าน browser แต่อันนี้ให้ Android ขออนุญาติโดยตรง
+
+        try {
+
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("isAdd", "true")); //ข้างหน้า key คืออะไร
+            nameValuePairs.add(new BasicNameValuePair("Officer", officerString));
+            nameValuePairs.add(new BasicNameValuePair("Desk", deskString));
+            nameValuePairs.add(new BasicNameValuePair("Food", foodString));
+            nameValuePairs.add(new BasicNameValuePair("Amount", amountString)); //key สี เขียว ต้องตรงกับ server ที่ทำไว้
+
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost("http://swiftcodingthai.com/19Mar/php_add_order.php");
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
+            httpClient.execute(httpPost);
+
+
+
+
+
+            Toast.makeText(OrderActivity.this, "Order" + foodString + " เรียบร้อยแล้ว", Toast.LENGTH_SHORT).show();
+
+
+        } catch (Exception e) {
+            Toast.makeText(OrderActivity.this, "ไม่สามารถเชื่อมต่อ Server ได้", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 
     private void createDeskSpinner() {
