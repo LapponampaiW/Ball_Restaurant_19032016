@@ -1,5 +1,6 @@
 package com.su.lapponampai_w.testrestaurant;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -78,6 +79,24 @@ public class MainActivity extends AppCompatActivity {
 
             String[] myResultStrings = myManage.searchUser(userString);
             //ไปใช้ Method searchUser ที่มีค่า เป็น Public ถ้าค้นเจอจะทำการ return เข้าไปใน myResultStrings
+
+
+            //Check Password
+            if (passwordString.equals(myResultStrings[2])) { //เช็ค password จาก myResultStrings ตำแหน่งที่ 2
+                //password True
+                Intent intent = new Intent(MainActivity.this,OrderActivity.class); // ทำการย้ายการทำงาน จากหน้าหนึ่งไปอีกหน้าหนึ่ง หรือ แอฟ ตัวอื่น หรือ ส่ง SMS หรือ ที่ Web view
+                intent.putExtra("Officer", myResultStrings[3]);
+                startActivity(intent);
+                finish();
+
+
+            } else {
+                //Password False
+                myAlert("Password ผิด");
+
+
+            } //if else statement
+
 
             myAlert("ยินดีต้อนรับ " + myResultStrings[3]);
 
