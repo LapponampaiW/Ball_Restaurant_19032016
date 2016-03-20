@@ -1,5 +1,6 @@
 package com.su.lapponampai_w.testrestaurant;
 
+import android.app.AlertDialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -48,32 +49,47 @@ public class OrderActivity extends AppCompatActivity {
 
         //Read All SQLite
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyopenHelper.database_name,
-                MODE_PRIVATE, null); // เปิด หรือ สร้าง อะไรหละ ก็เรียก database ขึ้นมาก ซิ
-        // ดึงข้อมูลทั้งก้อนมาอยู่ใน ram จะได้ประมวลผได้
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FORM " +
-                MyManage.food_table, null); //ใส่ ภาษา SQL ตรง Search เขียนอย่างนี้ก็ได้
+                MODE_PRIVATE, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + MyManage.food_table, null);
         cursor.moveToFirst();
-
         int intCount = cursor.getCount();
 
-
-        String[] iconStrings = new String[intCount]; //จองหน่วยความจำ = จำนวนตัว
-        String[] foodStrings = new String[intCount];
+        String[] iconStrings = new String[intCount];
+        final String[] foodStrings = new String[intCount];
         String[] priceStrings = new String[intCount];
 
         for (int i = 0; i < intCount; i++) {
-            iconStrings[i] = cursor.getString(cursor.getColumnIndex(MyManage.column_Source)); //การดึงค่า ที่ i = 0 มี source อะไรมาเก็บไว้ที่ iconStrings
+
+            iconStrings[i] = cursor.getString(cursor.getColumnIndex(MyManage.column_Source));
             foodStrings[i] = cursor.getString(cursor.getColumnIndex(MyManage.column_Food));
             priceStrings[i] = cursor.getString(cursor.getColumnIndex(MyManage.column_Price));
 
             cursor.moveToNext();
-
-
-        } //for
+        }   // for
         cursor.close();
 
-            FoodAdapter foodAdapter = new FoodAdapter(OrderActivity.this, iconStrings, foodStrings, priceStrings);
+        FoodAdapter foodAdapter = new FoodAdapter(OrderActivity.this, iconStrings,
+                foodStrings, priceStrings);
         foodListView.setAdapter(foodAdapter);
+
+        foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                foodString = foodStrings[i];
+
+                chooseAmount();
+
+            }
+        });
+
+    }
+
+
+    private void chooseAmount() {
+
+        CharSequence[] charSequences = {"1 จาน","2 จาน","3 จาน","4 จาน","5 จาน"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); //เจอ Builder แล้ว ctrl + space เลย
 
     }
 
