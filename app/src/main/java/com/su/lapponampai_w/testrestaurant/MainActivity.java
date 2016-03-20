@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private String userString, passwordString; //รับค่าจาก EditText เพื่อไปประมวลผล
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         synJSONtoSQLite();
 
 
-
-
     } // Main Method
 
     public void clickLogin(View view) { //เพื่อให้มองเห็นใน xml
@@ -70,12 +66,26 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             //No Space
-
+            checkUser(); //ทำ method แยก
         }
 
 
-
     } //clickLogin
+
+    private void checkUser() {
+
+        try {
+
+            String[] myResultStrings = myManage.searchUser(userString);
+            //ไปใช้ Method searchUser ที่มีค่า เป็น Public ถ้าค้นเจอจะทำการ return เข้าไปใน myResultStrings
+
+            myAlert("ยินดีต้อนรับ " + myResultStrings[3]);
+
+        } catch (Exception e) {
+            myAlert("ไม่มี " + userString + " ในฐานข้อมูลของเรา");
+        }
+
+    } // checkUser
 
     private void myAlert(String strMessage) {
         Toast.makeText(MainActivity.this, strMessage, Toast.LENGTH_SHORT).show();
@@ -97,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(threadPolicy);
 
         int intTable = 0;
-        while (intTable <=1) {
+        while (intTable <= 1) {
 
             //1 Create InputStream
             InputStream inputStream = null;
-            String[] urlStrings = {"http://swiftcodingthai.com/19Mar/php_get_user_master.php","http://swiftcodingthai.com/19Mar/php_get_food_master.php"};
+            String[] urlStrings = {"http://swiftcodingthai.com/19Mar/php_get_user_master.php", "http://swiftcodingthai.com/19Mar/php_get_food_master.php"};
 
             try { // Tray catch Statement ใช้เมื่อมีการเสี่ยงต่อการ error
 
@@ -122,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
             String strJSON = null;
             try {
 
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8")); //เข้ารหัส ขากลับ BufferedReader คือประมวลผล Buffer rate ในการตัดเชือก แล้วเอาไปวางหน้าบ้าน
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                //เข้ารหัส ขากลับ BufferedReader คือประมวลผล Buffer rate ในการตัดเชือก แล้วเอาไปวางหน้าบ้าน
                 StringBuilder stringBuilder = new StringBuilder(); //ต่อสิ่งที่ทำการตัด จาก bufferedReader
                 String strLine = null; //คล้ายๆ ตัวส่งเชือก
 
@@ -170,12 +181,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
-
             } catch (Exception e) {
                 Log.d("Rest", "Update SQLite==>" + e.toString());
             }
-
 
 
             intTable += 1;
@@ -188,10 +196,9 @@ public class MainActivity extends AppCompatActivity {
     private void deleteSQLite() {
 
         SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyopenHelper.database_name,
-                MODE_APPEND,null); //จะเปิด database name
+                MODE_APPEND, null); //จะเปิด database name
         sqLiteDatabase.delete(MyManage.user_table, null, null); //ลบใน user_table ทั้งหมด
         sqLiteDatabase.delete(MyManage.food_table, null, null); //ลบใน food_table ทั้งหมด
-
 
 
     }

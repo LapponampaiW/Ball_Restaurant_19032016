@@ -17,10 +17,11 @@ public class MyopenHelper extends SQLiteOpenHelper { //ต้องใช้ค�
             "_id integer primary key, " +
             "User text," +
             "Password text," +
-            "Name text);"; //สร้างรายละเอียดของ table  google กำหนดให้ใช้ _id เท่านั้น
-                                            // primary key = auto increase having null
-                                              // เป็นภาษา SQL ใช้คำสั่ง create table ............... ();
+            "Name text);";
 
+            /*สร้างรายละเอียดของ table  google กำหนดให้ใช้ _id เท่านั้น
+             primary key = auto increase having null
+             เป็นภาษา SQL ใช้คำสั่ง create table ............... ();  */
 
     private static final String create_food_table = "create table foodTABLE (" +
             "_id integer primary key, " +
@@ -40,7 +41,7 @@ public class MyopenHelper extends SQLiteOpenHelper { //ต้องใช้ค�
 
     }  //Constructor
 
-    @Override
+    @Override //จากการเติม extend SQLiteOpenHelper
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(create_user_table);
         sqLiteDatabase.execSQL(create_food_table);
@@ -49,7 +50,7 @@ public class MyopenHelper extends SQLiteOpenHelper { //ต้องใช้ค�
 
     }
 
-    @Override
+    @Override //จากการเติม extend SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }

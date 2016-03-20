@@ -2,6 +2,7 @@ package com.su.lapponampai_w.testrestaurant;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -37,6 +38,43 @@ public class MyManage {
         writeSqLiteDatabase = myopenHelper.getWritableDatabase(); //process เขียน
         readSqLiteDatabase = myopenHelper.getReadableDatabase(); //process อ่าน
     } //Constructor
+
+    public String[] searchUser(String strUser) { // การทำ Search
+        try {
+
+            String[] resultStrings = null;
+            Cursor cursor = readSqLiteDatabase.query(user_table,
+                    new String[]{column_id, column_User, column_Password, column_Name},
+                    column_User + "=?",
+                    new String[]{String.valueOf(strUser)},
+                    null,null,null,null);  //cursor ตัวที่จะไปประมวลผลใน ram เพราะ Android จะได้แค่ write & read
+
+            // table, censor (คล้าย select * form =? คือ เท่ากับ อะไรก็ได้) ,where
+            // ทำการค้นหาที่ละบรรทัดไปเรื่อยๆ ถ้าเจอแล้วจะหยุด
+            if (cursor != null ) { //ไม่เท่ากับความว่างป่าว คือต้องมี Data
+                if (cursor.moveToFirst()) {
+                    resultStrings = new String[4]; //จองหน่วยความจำ 4 ค่า id user password Name
+                    for (int i = 0; i < 4; i++) {
+                        resultStrings[i] = cursor.getString(i); //i จะวิ่งไปที่ 0 1 2 3 จะเอา id เป็น i ตำแน่งที่ 1 ... Name เป็น i ตำแหน่งที่ 3
+
+                    }
+                }
+
+            } //if
+            cursor.close();
+            return resultStrings;
+
+        } catch (Exception e) {
+            return null;
+        }
+
+
+        //return new String[0];
+    } //ให้มันทำการค้นหา
+    /*เมื่อทำงานสำเร็จจะทำการ return ค่าเป็น array ถ้าค้นไม่เจอจะ error จิงๆ ไม่ดี แต่เราสามารถ
+     ใส่ try catch เพื่อนำ error มาใช้ให้เป็นประโยชน์  การใส่ () เป็นการแสดงค่าเป็น method*/
+
+
 
     public long addValue(int intTABLE,
                          String strColumn2,
