@@ -1,6 +1,7 @@
 package com.su.lapponampai_w.testrestaurant;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,6 @@ public class OrderActivity extends AppCompatActivity {
     private String officerString, deskString, foodString, amountString; //สิ่งที่ต้องการโยนเข้าไปใน orderTABLE
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +39,6 @@ public class OrderActivity extends AppCompatActivity {
 
         //Create Food ListView
         createFoodListView();
-
-
 
 
     } //Main Method
@@ -88,17 +86,60 @@ public class OrderActivity extends AppCompatActivity {
 
     private void chooseAmount() {
 
-        CharSequence[] charSequences = {"1 จาน","2 จาน","3 จาน","4 จาน","5 จาน"};
+        CharSequence[] charSequences = {"1 จาน", "2 จาน", "3 จาน", "4 จาน", "5 จาน"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this); //เจอ Builder แล้ว ctrl + space เลย
+        builder.setTitle(foodString);
+        builder.setSingleChoiceItems(charSequences, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+                amountString = Integer.toString(i + 1); //เปลี่ยนตัวเลขให้กลายเป็นตัวอักษร โดยเอาค่า ของ i มาบวก หนึง
+
+                dialogInterface.dismiss(); // ทำให้หายไป
+
+                confirmOrder(); //พอกด command + enter จะมีให้เลือก 2 อย่าง สร้างใน Method หรือ สร้าง นอก Method
+
+
+            }
+        }); //OnclickListener คือการ เก็บ Event จากการ คลิก !!!! เก็บว่า order กี่จาน
+
+        builder.show();
+
+    }
+
+    private void confirmOrder() { //ทำการ Confirm order
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon_myaccount);
+        builder.setTitle("โปรดตรวจทาน");
+        builder.setMessage("Officer =" + officerString + "\n" +
+                "Desk = " + deskString + "\n" +
+                "Food =" + foodString + "\n" +
+                "Amount = " + amountString);
+
+
+
+        //ทำปุ่ม cancel กับ ปุ่ม Ok
+       builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { //setPositiveButtom เปลี่ยนเป็นอย่างอื่นได้ เต็มไปหมด
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                updateToServer();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+
+    } //confirmOrder
+
+    private void updateToServer() {
     }
 
     private void createDeskSpinner() {
 
-        final String[] deskStrings = {"โต๊ะ 1","โต๊ะ 2","โต๊ะ 3","โต๊ะ 4","โต๊ะ 5","โต๊ะ 6","โต๊ะ 7","โต๊ะ 8","โต๊ะ 9","โต๊ะ 10"};
+        final String[] deskStrings = {"โต๊ะ 1", "โต๊ะ 2", "โต๊ะ 3", "โต๊ะ 4", "โต๊ะ 5", "โต๊ะ 6", "โต๊ะ 7", "โต๊ะ 8", "โต๊ะ 9", "โต๊ะ 10"};
 
         ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,deskStrings);
+                android.R.layout.simple_list_item_1, deskStrings);
                 /* นำ arryAdapter  ของ google มาใช้ ต้องจำไปใช้เอง เป็น template มาใช้
                 * simple_list_item_1 เป็น แบบ
                 * deskStrings คือ ข้อมูลที่นำมาใช้*/
